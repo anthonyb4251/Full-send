@@ -1,0 +1,31 @@
+package com.fullsend.ecu
+
+import java.nio.ByteBuffer
+
+object ME75Bruteforce {
+    // Memory regions
+    private const val BOOST_MAP = 0x123456L
+    private const val IGNITION_MAP = 0x234567L
+    private const val IMMO_DATA = 0x345678L
+
+    fun patchECU(map: ByteArray, checksumBypass: Boolean = true): Boolean {
+        KWP2000.connect().use { ecu ->
+            // Disable protection
+            if (checksumBypass) {
+                ecu.write(0xFFFFF0, ByteArray(4) { 0x90.toByte() }) // NOP slide
+            }
+            
+            // Write boost map
+            ecu.write(BOOST_MAP, map.copyOfRange(0, 256))
+            
+            // Write ignition map
+            ecu.write(IGNITION_MAP, map.copyOfRange(256, 384))
+            
+            // Patch immobilizer
+            if (map.size > 384) {
+                ecu.write(IMMO_DATA, ByteArray(8) { 0xFF.toByte() }) // Disable immo
+            }
+            return true
+        }
+    }
+}
