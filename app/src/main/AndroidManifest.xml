@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions required for file access and storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
+                     android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
+                     android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" 
+                     tools:ignore="ScopedStorage" />
+    <!-- Permission for running a foreground service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Permission to start foreground services -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Permission to keep the processor from sleeping -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Permission for battery stats -->
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.JarvisAI"
+        android:requestLegacyExternalStorage="true">
+        
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.JarvisAI"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <service
+            android:name=".JarvisService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+            
+    </application>
+
+</manifest>
