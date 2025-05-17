@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Jarvis AI</string>
+    <string name="ai_system_online">AI System Online</string>
+    <string name="system_status_normal">System Status: Normal</string>
+    <string name="system_status_alert">System Status: Alert Mode</string>
+    <string name="activate_alert_mode">Activate Alert Mode</string>
+    <string name="emergency_shutdown">Emergency Shutdown</string>
+    <string name="battery_status">Battery Status: Checking…</string>
+    <string name="log_status">Logs: System operational</string>
+    <string name="storage_permission_required">Storage permission is required for Jarvis AI to function properly.</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="retry">Retry</string>
+    <string name="initializing">Initializing AI core…</string>
+    <string name="authentication_loaded">Authentication loaded</string>
+    <string name="power_management_online">Power management online</string>
+    <string name="service_notification_title">Jarvis AI</string>
+    <string name="service_notification_text">AI system is running</string>
+</resources>
