@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
     
     steps:
@@ -40,86 +40,58 @@ jobs:
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
-
-    - name: Upload APK as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: jarvis-ai-debug-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
-
-    - name: Create Release APK zip
+    - name: Prepare release files
       run: |
-        mkdir release
+        echo "📱 Preparing APK files for release..."
+        mkdir -p release
         cp app/build/outputs/apk/debug/app-debug.apk release/jarvis-ai.apk
         cd release
         zip -r ../jarvis-ai-android.zip .
         cd ..
+        echo "✅ Files prepared:"
+        ls -la release/
+        ls -la jarvis-ai-android.zip
 
-    - name: Upload Release zip as artifact
+    - name: Upload APK as artifact (for PR builds)
+      if: github.event_name == 'pull_request'
       uses: actions/upload-artifact@v4
       with:
-        name: jarvis-ai-release-zip
-        path: jarvis-ai-android.zip
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Download APK artifact
-      uses: actions/download-artifact@v4
-      with:
         name: jarvis-ai-debug-apk
-        path: ./
-
-    - name: Download zip artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: jarvis-ai-release-zip
-        path: ./
-
-    - name: List downloaded files
-      run: |
-        echo "Files in current directory:"
-        ls -la
-        echo "Renaming files for release..."
-        mv app-debug.apk jarvis-ai.apk || echo "APK file not found"
-        ls -la
+        path: release/jarvis-ai.apk
 
     - name: Get current date
+      if: github.ref == 'refs/heads/main'
       id: date
       run: echo "date=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
 
-    - name: Create Release
+    - name: Create Release (only on main branch)
+      if: github.ref == 'refs/heads/main'
       uses: softprops/action-gh-release@v1
       with:
         tag_name: v1.0-${{ steps.date.outputs.date }}
         name: Jarvis AI Android App v1.0-${{ steps.date.outputs.date }}
         body: |
-          ## Jarvis AI Android Application
+          ## 📱 Jarvis AI Android Application
           
-          **Download the APK directly or download the zip file containing the APK.**
+          **Download the APK below and install on your Android device!**
           
-          ### Installation Instructions:
-          1. Download the APK file below
-          2. Transfer it to your Android device
-          3. Enable "Install from unknown sources" in your device settings
-          4. Tap the APK file and follow the installation prompts
+          ### 🚀 Installation Instructions:
+          1. **Download** `jarvis-ai.apk` below
+          2. **Transfer** it to your Android device  
+          3. **Enable** "Install from unknown sources" in your device settings
+          4. **Tap** the APK file and follow the installation prompts
           
-          ### Features:
-          - Native Android AI assistant interface
-          - Battery monitoring with power-saving mode
-          - Event logging to external storage
-          - Alert mode functionality
-          - Emergency shutdown capability
+          ### ✨ Features:
+          - 🤖 Native Android AI assistant interface
+          - 🔋 Battery monitoring with power-saving mode  
+          - 📝 Event logging to external storage
+          - ⚠️ Alert mode functionality
+          - 🛑 Emergency shutdown capability
           
-          Built automatically from commit: ${{ github.sha }}
+          📅 **Built:** ${{ steps.date.outputs.date }}  
+          🔗 **Commit:** ${{ github.sha }}
         files: |
-          jarvis-ai.apk
+          release/jarvis-ai.apk
           jarvis-ai-android.zip
         draft: false
         prerelease: false
