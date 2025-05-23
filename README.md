@@ -82,4 +82,4 @@ The APK is automatically built using GitHub Actions. Download the latest APK fro
 ### Quick Download
 Get the latest APK: [Download Jarvis AI APK](https://github.com/anthonyb4251/Full-send/releases/latest)
 
-*APK builds automatically on every commit to main*
+*APK builds automatically when pushing to build-apk branch - BUILD TRIGGERED*
