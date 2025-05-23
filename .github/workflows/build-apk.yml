@@ -82,6 +82,14 @@ jobs:
         name: jarvis-ai-release-zip
         path: ./
 
+    - name: List downloaded files
+      run: |
+        echo "Files in current directory:"
+        ls -la
+        echo "Renaming files for release..."
+        mv app-debug.apk jarvis-ai.apk || echo "APK file not found"
+        ls -la
+
     - name: Get current date
       id: date
       run: echo "date=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
@@ -111,7 +119,7 @@ jobs:
           
           Built automatically from commit: ${{ github.sha }}
         files: |
-          app-debug.apk
+          jarvis-ai.apk
           jarvis-ai-android.zip
         draft: false
         prerelease: false
