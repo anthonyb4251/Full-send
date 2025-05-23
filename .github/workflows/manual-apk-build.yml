@@ -1,0 +1,107 @@
+name: Manual APK Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: 'Version name for the release (e.g., v1.0.1)'
+        required: false
+        default: 'v1.0-manual'
+
+jobs:
+  manual-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+
+    - name: ☕ Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: 📱 Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: 🔧 Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: 🏗️ Build Debug APK
+      run: |
+        echo "🏗️ Starting APK build..."
+        ./gradlew assembleDebug
+        echo "✅ Build completed!"
+
+    - name: 📦 Verify APK was created
+      run: |
+        echo "📦 Checking if APK was created..."
+        if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
+          echo "✅ APK found!"
+          ls -la app/build/outputs/apk/debug/
+          echo "📏 APK size: $(du -h app/build/outputs/apk/debug/app-debug.apk | cut -f1)"
+        else
+          echo "❌ APK not found!"
+          echo "📁 Contents of build directory:"
+          find app/build -name "*.apk" -type f
+          exit 1
+        fi
+
+    - name: 📱 Prepare release files
+      run: |
+        echo "📱 Preparing files for release..."
+        mkdir -p release-files
+        cp app/build/outputs/apk/debug/app-debug.apk release-files/jarvis-ai.apk
+        
+        echo "📦 Creating zip file..."
+        cd release-files
+        zip -r ../jarvis-ai-android.zip jarvis-ai.apk
+        cd ..
+        
+        echo "✅ Release files prepared:"
+        ls -la release-files/
+        ls -la jarvis-ai-android.zip
+
+    - name: 🚀 Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.event.inputs.version_name }}-${{ github.run_number }}
+        name: 📱 Jarvis AI APK - ${{ github.event.inputs.version_name }}
+        body: |
+          ## 📱 Jarvis AI Android Application (Manual Build)
+          
+          **🎉 Ready to install on your Android device!**
+          
+          ### 📥 Download Options:
+          - **jarvis-ai.apk** - Direct APK file (recommended)
+          - **jarvis-ai-android.zip** - APK in zip format
+          
+          ### 🚀 Installation Steps:
+          1. **Download** `jarvis-ai.apk` below
+          2. **Transfer** to your Android device
+          3. **Enable** "Install from unknown sources" in Settings
+          4. **Tap** the APK and follow prompts
+          
+          ### ✨ Features Included:
+          - 🤖 AI Assistant Interface
+          - 🔋 Battery Monitoring
+          - 📝 Event Logging
+          - ⚠️ Alert Mode
+          - 🛑 Emergency Shutdown
+          
+          **Built manually on:** $(date)
+          **Commit:** ${{ github.sha }}
+        files: |
+          release-files/jarvis-ai.apk
+          jarvis-ai-android.zip
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🎉 Success Message
+      run: |
+        echo "🎉 SUCCESS! APK has been built and released!"
+        echo "📥 Download from: https://github.com/${{ github.repository }}/releases"
+        echo "🚀 Your Jarvis AI APK is ready!"
