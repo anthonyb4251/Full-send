@@ -75,3 +75,6 @@ Jarvis AI is an Android application that brings AI assistant functionality to yo
 
 ## Development
 This Android application replaces the previous Termux-based scripts with native Android components, providing a more integrated and user-friendly experience while maintaining the same core functionality.
+
+## Automatic Builds
+The APK is automatically built using GitHub Actions. Download the latest APK from the [Releases](https://github.com/anthonyb4251/Full-send/releases) section.
