@@ -1,0 +1,2 @@
+This file triggers the APK build workflow on build-apk branch.
+Build timestamp: $(date)
