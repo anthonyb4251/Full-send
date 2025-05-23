@@ -2,7 +2,8 @@ name: Simple APK Build
 
 on:
   push:
-    branches: [ "build-apk" ]
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
