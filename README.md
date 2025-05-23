@@ -78,3 +78,6 @@ This Android application replaces the previous Termux-based scripts with native 
 
 ## Automatic Builds
 The APK is automatically built using GitHub Actions. Download the latest APK from the [Releases](https://github.com/anthonyb4251/Full-send/releases) section.
+
+### Quick Download
+Get the latest APK: [Download Jarvis AI APK](https://github.com/anthonyb4251/Full-send/releases/latest)
