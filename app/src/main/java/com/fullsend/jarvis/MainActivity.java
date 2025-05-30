@@ -87,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("No", null)
                 .show();
         });
+        
+        // Add OBD Diagnostics button
+        Button btnOBDDiagnostics = findViewById(R.id.btnOBDDiagnostics);
+        btnOBDDiagnostics.setOnClickListener(v -> {
+            logEvent("Opening OBD diagnostics");
+            Intent obdIntent = new Intent(MainActivity.this, com.fullsend.jarvis.obd.OBDActivity.class);
+            startActivity(obdIntent);
+        });
     }
 
     private void checkPermissionsAndInitialize() {

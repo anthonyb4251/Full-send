@@ -15,4 +15,5 @@
     <string name="power_management_online">Power management online</string>
     <string name="service_notification_title">Jarvis AI</string>
     <string name="service_notification_text">AI system is running</string>
+    <string name="obd_diagnostics">OBD Diagnostics</string>
 </resources>
