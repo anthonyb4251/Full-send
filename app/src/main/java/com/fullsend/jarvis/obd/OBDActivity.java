@@ -412,7 +412,7 @@ public class OBDActivity extends AppCompatActivity implements
         titleView.setText(title);
         titleView.setTextColor(getResources().getColor(R.color.neon_green, null));
         titleView.setTextSize(18);
-        titleView.setTextStyle(android.graphics.Typeface.BOLD);
+        titleView.setTypeface(null, android.graphics.Typeface.BOLD);
         titleView.setPadding(16, 16, 16, 8);
         layoutDTCs.addView(titleView);
         

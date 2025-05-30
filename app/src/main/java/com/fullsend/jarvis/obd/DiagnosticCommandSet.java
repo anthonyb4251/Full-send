@@ -58,25 +58,25 @@ public class DiagnosticCommandSet {
         // Manufacturer-specific services
         public static final byte VAG_READ_IDENTIFICATION = 0x1A;
         public static final byte VAG_READ_LOCAL_IDENTIFIER = 0x21;
-        public static final byte VAG_START_DIAGNOSTIC_SESSION = 0x85;
-        public static final byte VAG_STOP_DIAGNOSTIC_SESSION = 0x82;
-        public static final byte BMW_DYNAMIC_TEST = 0xB1;
+        public static final byte VAG_START_DIAGNOSTIC_SESSION = (byte) 0x85;
+        public static final byte VAG_STOP_DIAGNOSTIC_SESSION = (byte) 0x82;
+        public static final byte BMW_DYNAMIC_TEST = (byte) 0xB1;
         public static final byte MERCEDES_ACTUATOR_TEST = 0x30;
     }
     
     // Deep diagnostic data identifiers
     public static class DataIdentifier {
         // Engine parameters
-        public static final byte[] ENGINE_ECU_SERIAL = {0xF1, 0x8C};
-        public static final byte[] ENGINE_ECU_VERSION = {0xF1, 0x89};
-        public static final byte[] ENGINE_CALIBRATION_ID = {0xF1, 0x8A};
-        public static final byte[] ENGINE_REPROGRAMMING_DATE = {0xF1, 0x8B};
-        public static final byte[] ENGINE_ECU_INSTALL_DATE = {0xF1, 0x8D};
+        public static final byte[] ENGINE_ECU_SERIAL = {(byte) 0xF1, (byte) 0x8C};
+        public static final byte[] ENGINE_ECU_VERSION = {(byte) 0xF1, (byte) 0x89};
+        public static final byte[] ENGINE_CALIBRATION_ID = {(byte) 0xF1, (byte) 0x8A};
+        public static final byte[] ENGINE_REPROGRAMMING_DATE = {(byte) 0xF1, (byte) 0x8B};
+        public static final byte[] ENGINE_ECU_INSTALL_DATE = {(byte) 0xF1, (byte) 0x8D};
         
         // Vehicle identification
-        public static final byte[] VIN_DATA_IDENTIFIER = {0xF1, 0x90};
-        public static final byte[] ECU_MANUFACTURING_DATE = {0xF1, 0x8E};
-        public static final byte[] ECU_SUPPLIER_ID = {0xF1, 0x8F};
+        public static final byte[] VIN_DATA_IDENTIFIER = {(byte) 0xF1, (byte) 0x90};
+        public static final byte[] ECU_MANUFACTURING_DATE = {(byte) 0xF1, (byte) 0x8E};
+        public static final byte[] ECU_SUPPLIER_ID = {(byte) 0xF1, (byte) 0x8F};
         
         // Live engine data (extended)
         public static final byte[] REAL_TIME_ENGINE_DATA_1 = {0x21, 0x01};
@@ -214,7 +214,7 @@ public class DiagnosticCommandSet {
     public static class MercedesCommands {
         // Mercedes-Benz specific commands
         public static byte[] readDataStream() {
-            return new byte[]{0x21, 0x80};
+            return new byte[]{0x21, (byte) 0x80};
         }
         
         public static byte[] readActualValues(int parameterId) {
@@ -226,7 +226,7 @@ public class DiagnosticCommandSet {
         }
         
         public static byte[] readECUIdentification() {
-            return new byte[]{0x1A, 0x87};
+            return new byte[]{0x1A, (byte) 0x87};
         }
     }
     
