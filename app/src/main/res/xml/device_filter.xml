@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- USB 409.1 KKL Cable Device Filters -->
+    <!-- Common KKL cable vendor/product IDs -->
+    
+    <!-- Generic FTDI-based KKL cables -->
+    <usb-device vendor-id="1027" product-id="24577" />
+    <usb-device vendor-id="1027" product-id="24593" />
+    
+    <!-- Prolific PL2303-based KKL cables -->
+    <usb-device vendor-id="1659" product-id="8963" />
+    <usb-device vendor-id="1659" product-id="8976" />
+    
+    <!-- CH340/CH341-based KKL cables -->
+    <usb-device vendor-id="6790" product-id="29987" />
+    <usb-device vendor-id="6790" product-id="21795" />
+    
+    <!-- Silicon Labs CP210x-based KKL cables -->
+    <usb-device vendor-id="4292" product-id="60000" />
+    <usb-device vendor-id="4292" product-id="60016" />
+    
+    <!-- Generic USB-to-Serial converters often used in KKL cables -->
+    <usb-device vendor-id="1027" product-id="24596" />
+    <usb-device vendor-id="1659" product-id="8963" />
+    
+    <!-- ELM327-compatible devices -->
+    <usb-device vendor-id="7855" product-id="3" />
+    <usb-device vendor-id="1027" product-id="24577" />
+    
+    <!-- OBDLink devices -->
+    <usb-device vendor-id="7855" product-id="4" />
+    
+    <!-- Custom KKL cable implementations -->
+    <usb-device vendor-id="1155" product-id="22336" />
+    <usb-device vendor-id="1155" product-id="22352" />
+</resources>

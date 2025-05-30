@@ -72,6 +72,21 @@
         app:layout_constraintTop_toBottomOf="@+id/tvBatteryStatus" />
 
     <Button
+        android:id="@+id/btnOBDDiagnostics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/cyan"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/obd_diagnostics"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnEmergencyShutdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/btnEmergencyShutdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
