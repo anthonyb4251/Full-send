@@ -110,7 +110,7 @@ public class VoiceManager implements RecognitionListener, TextToSpeech.OnInitLis
     
     public void speak(String text, int queueMode, String utteranceId) {
         if (textToSpeech != null && isTTSReady) {
-            Map<String, String> params = new HashMap<>();
+            HashMap<String, String> params = new HashMap<>();
             if (utteranceId != null) {
                 params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceId);
             }
