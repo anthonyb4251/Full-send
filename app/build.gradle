@@ -56,6 +56,33 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     
+    // AI Assistant capabilities
+    implementation 'androidx.speech:speech:1.0.0'
+    implementation 'com.google.android.gms:play-services-speech:21.0.0'
+    implementation 'androidx.biometric:biometric:1.1.0'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.navigation:navigation-fragment:2.6.0'
+    implementation 'androidx.navigation:navigation-ui:2.6.0'
+    
+    // Weather and information services
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+    
+    // Animation and UI enhancements
+    implementation 'com.airbnb.android:lottie:6.1.0'
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+    implementation 'com.google.android.material:material:1.9.0'
+    
+    // Security and encryption
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    implementation 'net.zetetic:android-database-sqlcipher:4.5.4'
+    
+    // Machine learning and NLP
+    implementation 'com.google.mlkit:language-id:17.0.4'
+    implementation 'com.google.mlkit:translate:17.0.1'
+    implementation 'org.tensorflow:tensorflow-lite:2.13.0'
+    
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

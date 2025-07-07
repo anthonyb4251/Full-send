@@ -1,42 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_background"
+    android:fillViewport="true">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
+    <!-- Time and Date Display -->
+    <TextView
+        android:id="@+id/tvTimeDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="end"
+        android:text="00:00:00\nWed, Jan 1"
+        android:textColor="@color/cyan"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Jarvis Core Animation -->
+    <ImageView
+        android:id="@+id/ivJarvisCore"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/ic_launcher"
+        android:contentDescription="Jarvis Core"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTimeDate" />
+
+    <!-- AI Status -->
     <TextView
         android:id="@+id/tvAiStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="@string/ai_system_online"
         android:textColor="@color/neon_green"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ivJarvisCore" />
 
+    <!-- Voice Status -->
+    <TextView
+        android:id="@+id/tvVoiceStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Voice recognition disabled"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAiStatus" />
+
+    <!-- System Status -->
     <TextView
         android:id="@+id/tvSystemStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="@string/system_status_normal"
         android:textColor="@color/cyan"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAiStatus" />
+        app:layout_constraintTop_toBottomOf="@+id/tvVoiceStatus" />
 
+    <!-- Voice Control Button -->
     <Button
-        android:id="@+id/btnAlertMode"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnVoiceToggle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/cyan"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="Voice: OFF"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/btnSettings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSystemStatus" />
+
+    <!-- Settings Button -->
+    <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/primary"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="Settings"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnVoiceToggle"
+        app:layout_constraintTop_toBottomOf="@+id/tvSystemStatus" />
+
+    <!-- Alert Mode Button -->
+    <Button
+        android:id="@+id/btnAlertMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:background="@color/orange"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
@@ -45,13 +129,17 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSystemStatus" />
+        app:layout_constraintTop_toBottomOf="@+id/btnVoiceToggle" />
 
+    <!-- Battery Status -->
     <TextView
         android:id="@+id/tvBatteryStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/primary"
+        android:gravity="center"
+        android:padding="12dp"
         android:text="@string/battery_status"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -59,46 +147,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAlertMode" />
 
+    <!-- Log Status -->
     <TextView
         android:id="@+id/tvLogStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@color/primary"
+        android:gravity="center"
+        android:padding="12dp"
         android:text="@string/log_status"
-        android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textColor="@color/neon_green"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBatteryStatus" />
 
+    <!-- OBD Diagnostics Button -->
     <Button
         android:id="@+id/btnOBDDiagnostics"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="24dp"
         android:background="@color/cyan"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/obd_diagnostics"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnEmergencyShutdown"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLogStatus" />
 
+    <!-- Emergency Shutdown Button -->
     <Button
         android:id="@+id/btnEmergencyShutdown"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
         android:background="@color/red"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:text="@string/emergency_shutdown"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnOBDDiagnostics" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
