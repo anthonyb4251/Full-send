@@ -57,8 +57,6 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     
     // AI Assistant capabilities
-    implementation 'androidx.speech:speech:1.0.0'
-    implementation 'com.google.android.gms:play-services-speech:21.0.0'
     implementation 'androidx.biometric:biometric:1.1.0'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.navigation:navigation-fragment:2.6.0'
@@ -75,13 +73,12 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     
     // Security and encryption
-    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
-    implementation 'net.zetetic:android-database-sqlcipher:4.5.4'
+    implementation 'androidx.security:security-crypto:1.0.0'
     
     // Machine learning and NLP
     implementation 'com.google.mlkit:language-id:17.0.4'
     implementation 'com.google.mlkit:translate:17.0.1'
-    implementation 'org.tensorflow:tensorflow-lite:2.13.0'
+    implementation 'org.tensorflow:tensorflow-lite:2.12.0'
     
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
