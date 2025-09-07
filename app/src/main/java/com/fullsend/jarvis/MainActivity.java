@@ -128,6 +128,12 @@ public class MainActivity extends AppCompatActivity implements VoiceManager.Voic
         // OBD Diagnostics button
         Button btnOBDDiagnostics = findViewById(R.id.btnOBDDiagnostics);
         btnOBDDiagnostics.setOnClickListener(v -> openOBDDiagnostics());
+
+        // Virtual Garage button
+        Button btnVirtualGarage = findViewById(R.id.btnVirtualGarage);
+        if (btnVirtualGarage != null) {
+            btnVirtualGarage.setOnClickListener(v -> openVirtualGarage(null));
+        }
         
         // Initialize UI state
         updateVoiceUI();
@@ -339,6 +345,14 @@ public class MainActivity extends AppCompatActivity implements VoiceManager.Voic
         // Placeholder for settings activity
         Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();
         logEvent("Settings requested");
+    }
+
+    private void openVirtualGarage(String initialAction) {
+        Intent vgIntent = new Intent(MainActivity.this, com.fullsend.jarvis.garage.VirtualGarageActivity.class);
+        if (initialAction != null) {
+            vgIntent.putExtra(com.fullsend.jarvis.garage.VirtualGarageActivity.EXTRA_ACTION, initialAction);
+        }
+        startActivity(vgIntent);
     }
 
     private void checkPermissionsAndInitialize() {
@@ -686,6 +700,24 @@ public class MainActivity extends AppCompatActivity implements VoiceManager.Voic
             case "fetch_weather":
                 tvLogStatus.setText("Weather services integration coming soon");
                 tvLogStatus.setTextColor(getResources().getColor(R.color.cyan, null));
+                break;
+
+            case "open_virtual_garage":
+                if (parameters != null && parameters.containsKey("initial_action")) {
+                    Object init = parameters.get("initial_action");
+                    openVirtualGarage(init != null ? String.valueOf(init) : null);
+                } else {
+                    openVirtualGarage(null);
+                }
+                break;
+
+            case "garage_perform_action":
+                if (parameters != null && parameters.containsKey("action")) {
+                    Object act = parameters.get("action");
+                    openVirtualGarage(act != null ? String.valueOf(act) : null);
+                } else {
+                    openVirtualGarage(null);
+                }
                 break;
                 
             default:

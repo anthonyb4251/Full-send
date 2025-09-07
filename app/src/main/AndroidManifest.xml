@@ -85,6 +85,13 @@
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                        android:resource="@xml/device_filter" />
         </activity>
+
+        <!-- Virtual Garage Activity -->
+        <activity
+            android:name=".garage.VirtualGarageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JarvisAI"
+            android:screenOrientation="portrait" />
             
     </application>
 

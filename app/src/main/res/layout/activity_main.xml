@@ -180,6 +180,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLogStatus" />
 
+    <!-- Virtual Garage Button -->
+    <Button
+        android:id="@+id/btnVirtualGarage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/cyan"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="Virtual Garage"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnOBDDiagnostics" />
+
     <!-- Emergency Shutdown Button -->
     <Button
         android:id="@+id/btnEmergencyShutdown"
@@ -197,7 +214,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnOBDDiagnostics" />
+        app:layout_constraintTop_toBottomOf="@+id/btnVirtualGarage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
