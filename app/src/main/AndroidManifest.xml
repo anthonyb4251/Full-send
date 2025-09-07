@@ -11,15 +11,12 @@
                      tools:ignore="ScopedStorage" />
     <!-- Permission for running a foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- Permission to start foreground services -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <!-- Permission to keep the processor from sleeping -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Permission for battery stats -->
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     
-    <!-- USB Host permissions for KKL cable support -->
-    <uses-permission android:name="android.permission.USB_PERMISSION" />
+    <!-- USB Host support for KKL cable -->
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
     
     <!-- Internet permission for OBD data lookup -->
@@ -70,13 +67,12 @@
         <service
             android:name=".JarvisService"
             android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="specialUse" />
+            android:exported="false" />
             
         <!-- OBD Diagnostic Activity -->
         <activity
             android:name=".obd.OBDActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.JarvisAI"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -1,0 +1,38 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration file (sdk path, keystores, etc)
+local.properties
+
+# IntelliJ/Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea/**/gradle.xml
+.idea/**/workspace.xml
+.idea/**/libraries
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/vcs.xml
+.idea/**/misc.xml
+
+# Keystore files
+*.jks
+*.keystore
+
+# Android
+.cxx/
+.externalNativeBuild/
+
+# Log/outputs
+app/release/
+release/
+*.log
+
+# Misc
+.DS_Store
+Thumbs.db
