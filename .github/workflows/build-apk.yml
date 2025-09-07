@@ -2,10 +2,19 @@ name: Build Android APK
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - build-apk
+      - build-android-native-install
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - build-apk
+      - build-android-native-install
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-release:
@@ -54,6 +63,13 @@ jobs:
 
     - name: Upload APK as artifact (for PR builds)
       if: github.event_name == 'pull_request'
+      uses: actions/upload-artifact@v4
+      with:
+        name: jarvis-ai-debug-apk
+        path: release/jarvis-ai.apk
+
+    - name: Upload APK as artifact (for branch pushes)
+      if: github.event_name == 'push' && github.ref != 'refs/heads/main'
       uses: actions/upload-artifact@v4
       with:
         name: jarvis-ai-debug-apk

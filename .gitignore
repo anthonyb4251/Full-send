@@ -1,0 +1,56 @@
+# Android/IntelliJ/Gradle ignores
+
+# Gradle
+.gradle/
+**/build/
+/build/
+
+# Local configuration
+local.properties
+
+# IntelliJ / Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Android specific
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Generated outputs
+app/release/
+app/debug/
+*.apk
+*.ap_
+output.json
+
+# Keystores and signing
+*.jks
+*.keystore
+key.properties
+
+# Misc
+/cache/
+/release/
+
+# NDK
+obj/
+
+# Logs
+*.log
+
+# Ignore local test artifacts
+**/reports/
+**/tmp/
