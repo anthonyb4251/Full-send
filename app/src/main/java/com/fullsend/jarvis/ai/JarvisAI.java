@@ -88,6 +88,13 @@ public class JarvisAI {
             "(?i).*status.*report.*", "(?i).*system.*status.*", "(?i).*how.*is.*everything.*",
             "(?i).*all.*systems.*", "(?i).*full.*status.*"
         ));
+
+        // Interactive repair/video guidance
+        COMMAND_PATTERNS.put("video_guidance", Arrays.asList(
+            "(?i).*(how to|how do i|show me how to)\\s+.+",
+            "(?i).*(fix|replace|repair|install|remove)\\s+.+",
+            "(?i).*(video|guide|tutorial).*(engine|brake|battery|sensor|alternator|spark plug|oil).*"
+        ));
     }
     
     // Response templates
@@ -131,9 +138,15 @@ public class JarvisAI {
         ));
         
         RESPONSE_TEMPLATES.put("help_response", Arrays.asList(
-            "I can assist with system monitoring, automotive diagnostics, voice commands, and much more. Try asking about battery status, running diagnostics, or checking your vehicle.",
-            "My capabilities include system analysis, OBD vehicle diagnostics, security monitoring, and intelligent assistance. What would you like me to help with?",
-            "I'm equipped with advanced diagnostic tools, voice interaction, automotive systems, and comprehensive monitoring. How may I be of service?"
+            "I can assist with system monitoring, automotive diagnostics, voice commands, repair video guides, and much more. Try asking: 'show me how to replace my alternator'.",
+            "My capabilities include system analysis, OBD vehicle diagnostics, interactive repair guidance, security monitoring, and intelligent assistance. What would you like me to help with?",
+            "I'm equipped with advanced diagnostic tools, voice interaction, automotive systems, and interactive step-by-step guides. How may I be of service?"
+        ));
+
+        RESPONSE_TEMPLATES.put("video_guidance_intro", Arrays.asList(
+            "Generating an interactive repair guide.",
+            "Preparing a step-by-step video tutorial for you.",
+            "Creating a visual walkthrough now."
         ));
         
         RESPONSE_TEMPLATES.put("unknown_command", Arrays.asList(
@@ -233,6 +246,22 @@ public class JarvisAI {
             params.put("location", locationMatcher.group(2).trim());
         }
         
+        // Extract repair/query topic for video guidance
+        String q = null;
+        Matcher m1 = Pattern.compile("(?i).*?(?:how to|how do i|show me how to)\\s+(.+)").matcher(input);
+        if (m1.matches()) {
+            q = m1.group(1).trim();
+        }
+        if (q == null) {
+            Matcher m2 = Pattern.compile("(?i).*(?:fix|replace|repair|install|remove)\\s+(.+)").matcher(input);
+            if (m2.matches()) {
+                q = m2.group(1).trim();
+            }
+        }
+        if (q != null && !q.isEmpty()) {
+            params.put("query", q);
+        }
+        
         return params;
     }
     
@@ -270,6 +299,9 @@ public class JarvisAI {
                 break;
             case "shutdown":
                 handleShutdown();
+                break;
+            case "video_guidance":
+                handleVideoGuidance(command);
                 break;
             default:
                 handleUnknownCommand(command.getInput());
@@ -393,6 +425,23 @@ public class JarvisAI {
         // Trigger shutdown
         Map<String, Object> params = new HashMap<>();
         triggerAction("emergency_shutdown", params);
+    }
+    
+    private void handleVideoGuidance(AICommand command) {
+        String q = null;
+        if (command.getParameters() != null) {
+            q = command.getParameters().get("query");
+        }
+        if (q == null || q.isEmpty()) {
+            // Try to heuristically remove filler words
+            String input = command.getInput();
+            input = input.replaceAll("(?i)(show me|how to|how do i|please|jarvis|video|guide)", "").trim();
+            q = input;
+        }
+        respond(getRandomResponse("video_guidance_intro") + (q != null && !q.isEmpty() ? (" Topic: " + q) : ""));
+        Map<String, Object> params = new HashMap<>();
+        if (q != null) params.put("query", q);
+        triggerAction("open_video_guidance", params);
     }
     
     private void handleUnknownCommand(String command) {

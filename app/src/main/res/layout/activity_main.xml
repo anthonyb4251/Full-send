@@ -180,6 +180,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLogStatus" />
 
+    <!-- Video Guidance Button -->
+    <Button
+        android:id="@+id/btnVideoGuide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@color/primary"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/repair_video_guide"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnOBDDiagnostics" />
+
     <!-- Emergency Shutdown Button -->
     <Button
         android:id="@+id/btnEmergencyShutdown"
@@ -197,7 +214,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnOBDDiagnostics" />
+        app:layout_constraintTop_toBottomOf="@+id/btnVideoGuide" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

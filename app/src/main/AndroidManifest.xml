@@ -85,6 +85,13 @@
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                        android:resource="@xml/device_filter" />
         </activity>
+
+        <!-- Interactive Video Guide Activity -->
+        <activity
+            android:name=".guide.VideoGuideActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JarvisAI"
+            android:screenOrientation="portrait" />
             
     </application>
 

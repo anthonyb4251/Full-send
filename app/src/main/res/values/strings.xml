@@ -16,4 +16,5 @@
     <string name="service_notification_title">Jarvis AI</string>
     <string name="service_notification_text">AI system is running</string>
     <string name="obd_diagnostics">OBD Diagnostics</string>
+    <string name="repair_video_guide">Repair Video Guide</string>
 </resources>
