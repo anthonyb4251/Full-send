@@ -128,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements VoiceManager.Voic
         // OBD Diagnostics button
         Button btnOBDDiagnostics = findViewById(R.id.btnOBDDiagnostics);
         btnOBDDiagnostics.setOnClickListener(v -> openOBDDiagnostics());
+
+        // Video Guidance button
+        Button btnVideoGuide = findViewById(R.id.btnVideoGuide);
+        btnVideoGuide.setOnClickListener(v -> openVideoGuide(null));
         
         // Initialize UI state
         updateVoiceUI();
@@ -687,11 +691,29 @@ public class MainActivity extends AppCompatActivity implements VoiceManager.Voic
                 tvLogStatus.setText("Weather services integration coming soon");
                 tvLogStatus.setTextColor(getResources().getColor(R.color.cyan, null));
                 break;
+
+            case "open_video_guidance":
+                String q = null;
+                if (parameters != null && parameters.containsKey("query")) {
+                    Object obj = parameters.get("query");
+                    if (obj != null) q = obj.toString();
+                }
+                openVideoGuide(q);
+                break;
                 
             default:
                 logEvent("Unknown AI action: " + action);
                 break;
         }
+    }
+
+    private void openVideoGuide(String query) {
+        logEvent("Opening Video Guidance" + (query != null ? (": " + query) : ""));
+        Intent guideIntent = new Intent(MainActivity.this, com.fullsend.jarvis.guide.VideoGuideActivity.class);
+        if (query != null) {
+            guideIntent.putExtra(com.fullsend.jarvis.guide.VideoGuideActivity.EXTRA_QUERY, query);
+        }
+        startActivity(guideIntent);
     }
     
     @Override

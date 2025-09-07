@@ -352,6 +352,8 @@ public class OBDActivity extends AppCompatActivity implements
             if (response.success && response.parsedData.containsKey("vin")) {
                 String vin = (String) response.parsedData.get("vin");
                 addInfoDisplay("VIN: " + vin);
+                // Persist VIN for video guidance and vehicle profile features
+                com.fullsend.jarvis.guide.VehicleProfileManager.saveVIN(this, vin);
             }
             
             // Read ECU name
