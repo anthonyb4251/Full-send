@@ -88,6 +88,38 @@ public class JarvisAI {
             "(?i).*status.*report.*", "(?i).*system.*status.*", "(?i).*how.*is.*everything.*",
             "(?i).*all.*systems.*", "(?i).*full.*status.*"
         ));
+
+        // Virtual garage and car avatar interactions
+        COMMAND_PATTERNS.put("open_virtual_garage", Arrays.asList(
+            "(?i).*(open|enter|start).*virtual.*(garage|auto\\s*shop).*",
+            "(?i).*open.*garage.*",
+            "(?i).*virtual.*garage.*"
+        ));
+        COMMAND_PATTERNS.put("garage_open_door", Arrays.asList(
+            "(?i).*(open|unlock).*(car\\s*)?door.*",
+            "(?i).*open.*driver.*door.*"
+        ));
+        COMMAND_PATTERNS.put("garage_open_hood", Arrays.asList(
+            "(?i).*(open|pop|lift).*hood.*",
+            "(?i).*(open|pop|lift).*bonnet.*"
+        ));
+        COMMAND_PATTERNS.put("garage_show_engine", Arrays.asList(
+            "(?i).*(show|display|reveal).*engine.*",
+            "(?i).*engine.*bay.*"
+        ));
+        COMMAND_PATTERNS.put("garage_show_interior", Arrays.asList(
+            "(?i).*(show|display).*interior.*",
+            "(?i).*inside.*car.*"
+        ));
+        COMMAND_PATTERNS.put("garage_show_exterior", Arrays.asList(
+            "(?i).*(show|display).*exterior.*",
+            "(?i).*outside.*car.*"
+        ));
+        COMMAND_PATTERNS.put("garage_use_scanner", Arrays.asList(
+            "(?i).*(use|plug|connect).*scanner.*",
+            "(?i).*(use|plug|connect).*obd.*",
+            "(?i).*start.*diagnostic.*scanner.*"
+        ));
     }
     
     // Response templates
@@ -271,6 +303,27 @@ public class JarvisAI {
             case "shutdown":
                 handleShutdown();
                 break;
+            case "open_virtual_garage":
+                handleOpenVirtualGarage(null);
+                break;
+            case "garage_open_door":
+                handleOpenVirtualGarage("open_door");
+                break;
+            case "garage_open_hood":
+                handleOpenVirtualGarage("open_hood");
+                break;
+            case "garage_show_engine":
+                handleOpenVirtualGarage("show_engine");
+                break;
+            case "garage_show_interior":
+                handleOpenVirtualGarage("show_interior");
+                break;
+            case "garage_show_exterior":
+                handleOpenVirtualGarage("show_exterior");
+                break;
+            case "garage_use_scanner":
+                handleOpenVirtualGarage("use_scanner");
+                break;
             default:
                 handleUnknownCommand(command.getInput());
                 break;
@@ -393,6 +446,18 @@ public class JarvisAI {
         // Trigger shutdown
         Map<String, Object> params = new HashMap<>();
         triggerAction("emergency_shutdown", params);
+    }
+
+    private void handleOpenVirtualGarage(String initialAction) {
+        if (initialAction == null) {
+            respond("Opening the virtual auto shop, sir.");
+            triggerAction("open_virtual_garage", new HashMap<>());
+        } else {
+            respond("Opening the virtual garage and executing your request, sir.");
+            Map<String, Object> params = new HashMap<>();
+            params.put("initial_action", initialAction);
+            triggerAction("open_virtual_garage", params);
+        }
     }
     
     private void handleUnknownCommand(String command) {
