@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.JarvisAI" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!-- Enhanced application theme with advanced styling -->
+    <style name="Theme.JarvisAI.Enhanced" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
@@ -20,14 +20,12 @@
         <item name="android:windowBackground">@color/dark_background</item>
         <item name="android:colorBackground">@color/dark_background</item>
         <item name="colorSurface">@color/dark_background</item>
-        <!-- Button style -->
-        <item name="materialButtonStyle">@style/Widget.JarvisAI.Button</item>
         <!-- Card style -->
         <item name="materialCardViewStyle">@style/Widget.JarvisAI.CardView</item>
     </style>
 
-    <!-- Custom button style -->
-    <style name="Widget.JarvisAI.Button" parent="Widget.MaterialComponents.Button">
+    <!-- Enhanced button style -->
+    <style name="Widget.JarvisAI.Button.Enhanced" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/white</item>
         <item name="backgroundTint">@color/primary</item>
         <item name="cornerRadius">8dp</item>
