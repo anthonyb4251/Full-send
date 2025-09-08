@@ -1,53 +1,235 @@
-name: Simple APK Build
+name: Jarvis AI Release Builder
 
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
   releases: write
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout
+    - name: 📥 Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17
+    - name: ☕ Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Android SDK
+    - name: 📱 Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Make gradlew executable
+    - name: 🔧 Make gradlew executable
       run: chmod +x gradlew
 
-    - name: Build APK
+    - name: 🧹 Clean previous builds
+      run: ./gradlew clean
+
+    - name: 🏗️ Build Release APK
       run: ./gradlew assembleDebug
 
-    - name: Create Release
+    - name: 📦 Prepare Release Assets
+      run: |
+        echo "📦 Preparing release assets..."
+        mkdir -p release-assets
+        
+        # Copy APK with user-friendly name
+        cp app/build/outputs/apk/debug/app-debug.apk release-assets/jarvis-ai.apk
+        
+        # Create installation package
+        mkdir -p installation-package
+        cp app/build/outputs/apk/debug/app-debug.apk installation-package/jarvis-ai.apk
+        
+        # Create installation instructions
+        cat > installation-package/INSTALLATION-GUIDE.txt << 'EOF'
+        📱 JARVIS AI - INSTALLATION GUIDE
+        ================================
+        
+        🎯 WHAT YOU HAVE:
+        - jarvis-ai.apk - The Jarvis AI Android application
+        
+        🚀 INSTALLATION STEPS:
+        
+        1. ENABLE UNKNOWN SOURCES:
+           - Go to Android Settings
+           - Search for "Install unknown apps" or "Unknown sources"  
+           - Enable installation from unknown sources for your file manager
+        
+        2. INSTALL THE APK:
+           - Transfer jarvis-ai.apk to your Android device
+           - Tap the APK file on your device
+           - Follow the installation prompts
+           - Grant requested permissions (storage access)
+        
+        3. LAUNCH THE APP:
+           - Find "Jarvis AI" in your app drawer
+           - Tap to launch your AI assistant
+        
+        ✨ FEATURES:
+        - AI System interface with dark J.A.R.V.I.S theme
+        - Real-time battery monitoring with power-saving mode
+        - System status monitoring and alerts
+        - Event logging to device storage
+        - Emergency shutdown functionality
+        
+        📱 COMPATIBILITY:
+        - Android 6.0+ (API level 23 or higher)
+        - Works on phones and tablets
+        - No root required
+        
+        🎉 ENJOY YOUR JARVIS AI ASSISTANT!
+        EOF
+        
+        # Create features documentation
+        cat > installation-package/FEATURES.md << 'EOF'
+        # 🤖 Jarvis AI Features
+        
+        ## 🎨 User Interface
+        - Dark theme inspired by J.A.R.V.I.S from Iron Man
+        - Clean, modern Android Material Design
+        - Intuitive controls and status indicators
+        
+        ## 🔋 Battery Management
+        - Real-time battery level monitoring
+        - Automatic power-saving mode activation
+        - Low battery warnings and notifications
+        
+        ## 📊 System Monitoring
+        - System status display (Normal/Alert modes)
+        - Real-time system health monitoring
+        - Alert mode for enhanced system awareness
+        
+        ## 📝 Event Logging
+        - Comprehensive event logging system
+        - Logs stored in device storage (/storage/emulated/0/JarvisAI/)
+        - Persistent logging across app sessions
+        - Timestamped event records
+        
+        ## 🛑 Safety Features
+        - Emergency shutdown functionality
+        - Confirmation dialogs for critical actions
+        - Safe system termination procedures
+        
+        ## 🔐 Permissions
+        - Storage access (for event logging)
+        - Battery statistics (for monitoring)
+        - Foreground service (for background operation)
+        
+        ## 📱 Compatibility
+        - Minimum: Android 6.0 (API 23)
+        - Recommended: Android 8.0+ for best performance
+        - Supports both phones and tablets
+        - Portrait orientation optimized
+        EOF
+        
+        # Create zip package
+        cd installation-package
+        zip -r ../release-assets/jarvis-ai-installation-package.zip .
+        cd ..
+        
+        # Get APK info
+        APK_SIZE=$(du -h release-assets/jarvis-ai.apk | cut -f1)
+        echo "APK_SIZE=$APK_SIZE" >> $GITHUB_ENV
+        
+        echo "✅ Release assets prepared:"
+        ls -la release-assets/
+
+    - name: 🏷️ Generate Release Info
+      id: release_info
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+          PRERELEASE="${{ github.event.inputs.prerelease }}"
+        else
+          VERSION="v1.0.$(date +'%Y%m%d')-build${{ github.run_number }}"
+          PRERELEASE="false"
+        fi
+        
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "prerelease=$PRERELEASE" >> $GITHUB_OUTPUT
+        echo "build_date=$(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
+
+    - name: 🚀 Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: jarvis-ai-${{ github.run_number }}
-        name: Jarvis AI APK Build #${{ github.run_number }}
+        tag_name: ${{ steps.release_info.outputs.version }}
+        name: 📱 Jarvis AI Android App ${{ steps.release_info.outputs.version }}
         body: |
-          ## Jarvis AI Android APK
+          # 🤖 Jarvis AI Android Application
           
-          Download the APK below and install on your Android device.
+          **A sophisticated AI assistant app for Android devices, inspired by J.A.R.V.I.S from Iron Man.**
           
-          **Installation:**
-          1. Download app-debug.apk
-          2. Enable "Install from unknown sources" 
-          3. Install the APK
-        files: app/build/outputs/apk/debug/app-debug.apk
+          ## 📥 Download Options
+          
+          - **`jarvis-ai.apk`** - Ready-to-install Android application (${{ env.APK_SIZE }})
+          - **`jarvis-ai-installation-package.zip`** - Complete package with installation guide and documentation
+          
+          ## 🚀 Quick Installation
+          
+          1. **Download** `jarvis-ai.apk` below
+          2. **Enable** "Install from unknown sources" in Android Settings
+          3. **Install** the APK on your device
+          4. **Launch** Jarvis AI from your app drawer
+          
+          ## ✨ Key Features
+          
+          - 🎨 **Dark J.A.R.V.I.S Theme** - Sleek interface inspired by Iron Man's AI
+          - 🔋 **Battery Monitoring** - Real-time battery status with power-saving mode
+          - 📊 **System Status** - Monitor system health with normal/alert modes
+          - 📝 **Event Logging** - Comprehensive logging to device storage
+          - 🛑 **Emergency Controls** - Safe shutdown and system management
+          - 🔐 **Secure Operation** - Proper permission handling and data protection
+          
+          ## 📱 Compatibility
+          
+          - **Minimum:** Android 6.0 (API 23)
+          - **Recommended:** Android 8.0+ for optimal performance
+          - **Devices:** Phones and tablets supported
+          - **Root:** Not required - works on stock Android
+          
+          ## 📋 Installation Requirements
+          
+          - Android device with "Install from unknown sources" enabled
+          - ~${{ env.APK_SIZE }} of storage space
+          - Storage permission (requested during first launch)
+          
+          ---
+          
+          **Build Information:**
+          - 📅 **Built:** ${{ steps.release_info.outputs.build_date }}
+          - 🔗 **Commit:** [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          - 🏗️ **Build #:** ${{ github.run_number }}
+          
+          **Need help?** Check the installation guide included in the zip package or open an issue on GitHub.
+        files: |
+          release-assets/jarvis-ai.apk
+          release-assets/jarvis-ai-installation-package.zip
         draft: false
-        prerelease: false
+        prerelease: ${{ steps.release_info.outputs.prerelease == 'true' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🎉 Release Summary
+      run: |
+        echo "🎉 Release created successfully!"
+        echo "📱 APK: jarvis-ai.apk (${{ env.APK_SIZE }})"
+        echo "📦 Package: jarvis-ai-installation-package.zip"
+        echo "🏷️ Version: ${{ steps.release_info.outputs.version }}"
+        echo "🔗 Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release_info.outputs.version }}"
