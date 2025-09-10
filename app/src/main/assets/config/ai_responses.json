@@ -1,0 +1,103 @@
+{
+  "greeting_responses": [
+    "Good day, sir. Jarvis at your service.",
+    "Hello. How may I assist you today?",
+    "Jarvis online and ready for your commands.",
+    "Good to see you again. What can I do for you?",
+    "Systems operational. How may I help?"
+  ],
+  "system_status_responses": [
+    "All systems are functioning within normal parameters.",
+    "System status: Optimal. All components operational.",
+    "Everything is running smoothly, sir.",
+    "All systems green. No issues detected.",
+    "System health: Excellent. Ready for any task."
+  ],
+  "battery_responses": {
+    "high": [
+      "Battery level is optimal at {percentage}%.",
+      "Power reserves are excellent at {percentage}%.",
+      "Battery status: {percentage}% - Full power available."
+    ],
+    "medium": [
+      "Battery level at {percentage}%. Still plenty of power.",
+      "Power level: {percentage}% - Operating normally.",
+      "Battery status: {percentage}% - No concerns at this time."
+    ],
+    "low": [
+      "Battery level is low at {percentage}%. Consider charging soon.",
+      "Power reserves at {percentage}%. Recommend connecting to power.",
+      "Battery warning: {percentage}% remaining. Please charge when convenient."
+    ],
+    "critical": [
+      "Critical battery level: {percentage}%. Immediate charging required.",
+      "Power critical at {percentage}%. Switching to power saving mode.",
+      "Emergency power level: {percentage}%. Please connect charger immediately."
+    ]
+  },
+  "obd_responses": {
+    "connection_success": [
+      "OBD connection established successfully.",
+      "Vehicle diagnostics online. Ready to scan.",
+      "Connected to vehicle systems. Diagnostics available.",
+      "OBD interface active. Vehicle data streaming."
+    ],
+    "connection_failed": [
+      "Unable to establish OBD connection. Please check cable.",
+      "Vehicle connection failed. Verify OBD port and cable.",
+      "Diagnostics unavailable. Check OBD adapter connection.",
+      "Cannot connect to vehicle. Please ensure ignition is on."
+    ],
+    "scan_complete": [
+      "Diagnostic scan complete. {dtc_count} issues found.",
+      "Vehicle scan finished. Analysis ready for review.",
+      "Diagnostics complete. {dtc_count} diagnostic codes detected.",
+      "System scan done. Vehicle health report available."
+    ]
+  },
+  "error_responses": [
+    "I apologize, but I encountered an error processing that request.",
+    "Something went wrong. Please try again.",
+    "I'm having difficulty with that command. Could you rephrase?",
+    "Error detected. Attempting to resolve the issue.",
+    "My apologies, sir. That function is temporarily unavailable."
+  ],
+  "confirmation_responses": [
+    "Understood. Executing command.",
+    "Confirmed. Processing your request.",
+    "Acknowledged. Task initiated.",
+    "Very well, sir. Proceeding as requested.",
+    "Command received. Beginning execution."
+  ],
+  "emergency_responses": [
+    "Emergency mode activated. All non-essential systems disabled.",
+    "Emergency protocol engaged. Standing by for instructions.",
+    "Alert: Emergency mode active. How may I assist?",
+    "Emergency systems online. Ready for immediate action.",
+    "Crisis mode enabled. Awaiting your commands."
+  ],
+  "voice_commands": {
+    "wake_words": ["jarvis", "hey jarvis", "ok jarvis"],
+    "system_commands": {
+      "status": ["status", "system status", "how are you", "report"],
+      "battery": ["battery", "power level", "battery status", "charge level"],
+      "scan": ["scan", "diagnostic", "check car", "vehicle scan"],
+      "emergency": ["emergency", "alert mode", "crisis", "help"],
+      "shutdown": ["shutdown", "power off", "sleep", "goodbye"]
+    }
+  },
+  "personality_traits": {
+    "formal": true,
+    "helpful": true,
+    "professional": true,
+    "respectful": true,
+    "efficient": true,
+    "british_accent": true
+  },
+  "context_awareness": {
+    "remember_preferences": true,
+    "learn_patterns": true,
+    "adapt_responses": true,
+    "personalization": true
+  }
+}

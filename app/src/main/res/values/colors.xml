@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_background">#1e1e1e</color>
-    <color name="neon_green">#00ff00</color>
-    <color name="cyan">#00ffff</color>
-    <color name="orange">#ffa500</color>
+    <!-- J.A.R.V.I.S Theme Colors -->
+    <color name="primary">#1E88E5</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="accent">#00E676</color>
+    <color name="neon_green">#00FF41</color>
+    <color name="cyan">#00BCD4</color>
+    
+    <!-- Background Colors -->
+    <color name="dark_background">#121212</color>
     <color name="black">#000000</color>
-    <color name="white">#ffffff</color>
-    <color name="red">#ff0000</color>
-    <color name="gray">#808080</color>
-    <color name="light_blue">#add8e6</color>
-    <color name="dark_blue">#0000a0</color>
-    <color name="primary">#0f2b46</color>
-    <color name="primary_dark">#071a2c</color>
-    <color name="accent">#00ffff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#757575</color>
+    
+    <!-- Additional Colors for Compatibility -->
+    <color name="orange">#FFA500</color>
+    <color name="red">#FF0000</color>
+    <color name="light_blue">#ADD8E6</color>
+    <color name="dark_blue">#0000A0</color>
 </resources>

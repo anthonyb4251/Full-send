@@ -1,0 +1,162 @@
+{
+  "vehicle_manufacturers": {
+    "audi": {
+      "name": "Audi",
+      "obd_protocol": "ISO14230_4_KWP",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "Carbon buildup in direct injection engines",
+        "Timing chain tensioner issues",
+        "Electrical system complexity"
+      ]
+    },
+    "bmw": {
+      "name": "BMW",
+      "obd_protocol": "ISO9141_2",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "VANOS system problems",
+        "Cooling system issues",
+        "Electronic module failures"
+      ]
+    },
+    "mercedes": {
+      "name": "Mercedes-Benz",
+      "obd_protocol": "ISO14230_4_KWP",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "Air suspension problems",
+        "SBC brake system issues",
+        "Complex electrical systems"
+      ]
+    },
+    "volkswagen": {
+      "name": "Volkswagen",
+      "obd_protocol": "ISO14230_4_KWP",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "DSG transmission problems",
+        "Carbon buildup",
+        "Electrical gremlins"
+      ]
+    },
+    "ford": {
+      "name": "Ford",
+      "obd_protocol": "ISO15765_4_CAN_11BIT_500K",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "PowerShift transmission issues",
+        "EcoBoost engine problems",
+        "Sync system glitches"
+      ]
+    },
+    "toyota": {
+      "name": "Toyota",
+      "obd_protocol": "ISO15765_4_CAN_11BIT_500K",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "Oil consumption in some engines",
+        "Hybrid battery degradation",
+        "CVT transmission issues"
+      ]
+    },
+    "honda": {
+      "name": "Honda",
+      "obd_protocol": "ISO15765_4_CAN_11BIT_500K",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "VTC actuator problems",
+        "CVT transmission issues",
+        "A/C compressor failures"
+      ]
+    },
+    "nissan": {
+      "name": "Nissan",
+      "obd_protocol": "ISO15765_4_CAN_11BIT_500K",
+      "supported_years": "1996-present",
+      "common_issues": [
+        "CVT transmission failures",
+        "Timing chain stretch",
+        "Fuel pump issues"
+      ]
+    }
+  },
+  "diagnostic_trouble_codes": {
+    "P0300": {
+      "description": "Random/Multiple Cylinder Misfire Detected",
+      "severity": "high",
+      "possible_causes": [
+        "Faulty spark plugs",
+        "Ignition coil failure",
+        "Fuel injector problems",
+        "Low fuel pressure",
+        "Vacuum leak"
+      ],
+      "recommended_action": "Immediate diagnosis required"
+    },
+    "P0420": {
+      "description": "Catalyst System Efficiency Below Threshold",
+      "severity": "medium",
+      "possible_causes": [
+        "Catalytic converter failure",
+        "Oxygen sensor malfunction",
+        "Engine running rich/lean",
+        "Exhaust leak"
+      ],
+      "recommended_action": "Schedule service soon"
+    },
+    "P0171": {
+      "description": "System Too Lean (Bank 1)",
+      "severity": "medium",
+      "possible_causes": [
+        "Vacuum leak",
+        "Mass airflow sensor failure",
+        "Fuel pump problems",
+        "Dirty fuel injectors"
+      ],
+      "recommended_action": "Diagnosis recommended"
+    },
+    "P0301": {
+      "description": "Cylinder 1 Misfire Detected",
+      "severity": "high",
+      "possible_causes": [
+        "Faulty spark plug (cylinder 1)",
+        "Ignition coil failure",
+        "Fuel injector problem",
+        "Compression issue"
+      ],
+      "recommended_action": "Immediate attention required"
+    }
+  },
+  "maintenance_schedules": {
+    "basic": {
+      "oil_change": "5000-7500 miles",
+      "air_filter": "15000-30000 miles",
+      "cabin_filter": "15000-25000 miles",
+      "spark_plugs": "30000-100000 miles",
+      "brake_fluid": "2-3 years",
+      "coolant": "5-10 years"
+    },
+    "severe_conditions": {
+      "oil_change": "3000-5000 miles",
+      "air_filter": "10000-15000 miles",
+      "cabin_filter": "10000-15000 miles",
+      "transmission_service": "30000-60000 miles"
+    }
+  },
+  "fuel_efficiency_tips": [
+    "Maintain proper tire pressure",
+    "Regular engine maintenance",
+    "Remove excess weight from vehicle",
+    "Avoid aggressive driving",
+    "Use cruise control on highways",
+    "Keep up with scheduled maintenance",
+    "Replace air filter when dirty",
+    "Use recommended oil viscosity"
+  ],
+  "emergency_contacts": {
+    "roadside_assistance": "Call your insurance provider",
+    "emergency_services": "911",
+    "poison_control": "1-800-222-1222"
+  }
+}
