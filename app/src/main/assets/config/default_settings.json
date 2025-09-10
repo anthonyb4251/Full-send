@@ -1,0 +1,45 @@
+{
+  "jarvis_ai": {
+    "version": "1.0.0",
+    "installation_date": "",
+    "first_run": true,
+    "user_preferences": {
+      "voice_enabled": true,
+      "voice_model": "default",
+      "response_speed": "normal",
+      "ui_theme": "dark_jarvis",
+      "notifications_enabled": true,
+      "sound_effects": true
+    },
+    "ai_settings": {
+      "natural_language_processing": true,
+      "learning_mode": true,
+      "context_awareness": true,
+      "personality": "jarvis",
+      "response_style": "professional"
+    }
+  },
+  "system_monitoring": {
+    "battery_monitoring": true,
+    "power_saving_threshold": 20,
+    "system_health_checks": true,
+    "performance_optimization": true,
+    "auto_cleanup": true,
+    "log_retention_days": 30
+  },
+  "security": {
+    "biometric_auth": false,
+    "pin_protection": false,
+    "secure_storage": true,
+    "privacy_mode": false,
+    "data_encryption": true
+  },
+  "features": {
+    "obd_diagnostics": true,
+    "virtual_garage": true,
+    "voice_commands": true,
+    "system_alerts": true,
+    "emergency_mode": true,
+    "auto_updates": true
+  }
+}
