@@ -98,7 +98,7 @@
                     android:text="Welcome to the Jarvis AI Installation Wizard!"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:lineSpacing="1.2"
+                    android:lineSpacingMultiplier="1.2"
                     android:fontFamily="sans-serif" />
 
                 <!-- Feature Icons Section -->
