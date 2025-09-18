@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.tensorflow.lite.Interpreter;
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+// import org.tensorflow.lite.support.tensorbuffer.TensorBuffer; // Not available on Android
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -41,7 +41,7 @@ public class ReverseEngineeringEngine {
     
     // Analysis cache
     private Map<String, SystemAnalysis> analysisCache;
-    private Map<String, PerformanceProfile> performanceCache;
+    private Map<String, String> performanceCache;
     
     public ReverseEngineeringEngine(Context context) {
         this.context = context;
@@ -92,7 +92,9 @@ public class ReverseEngineeringEngine {
             analysis.installedApps = analyzeInstalledApplications();
             
             // System configuration
-            analysis.systemConfiguration = analyzeSystemConfiguration();
+            analysis.systemConfiguration = new HashMap<>();
+            analysis.systemConfiguration.put("android_version", Build.VERSION.RELEASE);
+            analysis.systemConfiguration.put("api_level", String.valueOf(Build.VERSION.SDK_INT));
             
             // Generate insights
             analysis.insights = generateSystemInsights(analysis);

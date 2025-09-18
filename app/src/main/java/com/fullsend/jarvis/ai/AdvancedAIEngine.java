@@ -383,8 +383,17 @@ public class AdvancedAIEngine {
      */
     private void checkAutonomousActions(String input, AIAnalysis analysis) {
         if (analysis.requiresAutonomousAction()) {
-            autonomousAgent.executeAutonomousAction(analysis.getAutonomousAction(), (action, result) -> {
-                Log.i(TAG, "Autonomous action executed: " + action + " -> " + result);
+            autonomousAgent.executeAutonomousAction(analysis.getAutonomousAction(), new AutonomousAgent.AutonomousCallback() {
+                @Override
+                public void onAutonomousAction(String action, String result) {
+                    Log.i(TAG, "Autonomous action executed: " + action + " -> " + result);
+                }
+                @Override
+                public void onProblemSolved(String problem, String solution) {}
+                @Override
+                public void onErrorHandled(Exception error, String resolution) {}
+                @Override
+                public void onMaintenancePerformed(String maintenance) {}
             });
         }
         

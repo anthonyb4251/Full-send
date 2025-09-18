@@ -247,38 +247,83 @@ public class AutonomousAgent {
                 // Memory cleanup
                 if (shouldPerformMemoryCleanup()) {
                     maintenanceTasks.add("Memory cleanup");
-                    executeAutonomousAction("clean_memory", (action, result) -> {
-                        Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                    executeAutonomousAction("clean_memory", new AutonomousCallback() {
+                        @Override
+                        public void onAutonomousAction(String action, String result) {
+                            Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                        }
+                        @Override
+                        public void onProblemSolved(String problem, String solution) {}
+                        @Override
+                        public void onErrorHandled(Exception error, String resolution) {}
+                        @Override
+                        public void onMaintenancePerformed(String maintenance) {}
                     });
                 }
                 
                 // Performance optimization
                 if (shouldOptimizePerformance()) {
                     maintenanceTasks.add("Performance optimization");
-                    executeAutonomousAction("optimize_performance", (action, result) -> {
-                        Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                    executeAutonomousAction("optimize_performance", new AutonomousCallback() {
+                        @Override
+                        public void onAutonomousAction(String action, String result) {
+                            Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                        }
+                        @Override
+                        public void onProblemSolved(String problem, String solution) {}
+                        @Override
+                        public void onErrorHandled(Exception error, String resolution) {}
+                        @Override
+                        public void onMaintenancePerformed(String maintenance) {}
                     });
                 }
                 
                 // System analysis
                 if (shouldAnalyzeSystem()) {
                     maintenanceTasks.add("System analysis");
-                    executeAutonomousAction("analyze_system", (action, result) -> {
-                        Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                    executeAutonomousAction("analyze_system", new AutonomousCallback() {
+                        @Override
+                        public void onAutonomousAction(String action, String result) {
+                            Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                        }
+                        @Override
+                        public void onProblemSolved(String problem, String solution) {}
+                        @Override
+                        public void onErrorHandled(Exception error, String resolution) {}
+                        @Override
+                        public void onMaintenancePerformed(String maintenance) {}
                     });
                 }
                 
                 // Resource monitoring
                 maintenanceTasks.add("Resource monitoring");
-                executeAutonomousAction("monitor_resources", (action, result) -> {
-                    Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                executeAutonomousAction("monitor_resources", new AutonomousCallback() {
+                    @Override
+                    public void onAutonomousAction(String action, String result) {
+                        Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                    }
+                    @Override
+                    public void onProblemSolved(String problem, String solution) {}
+                    @Override
+                    public void onErrorHandled(Exception error, String resolution) {}
+                    @Override
+                    public void onMaintenancePerformed(String maintenance) {}
                 });
                 
                 // Security scan
                 if (shouldPerformSecurityScan()) {
                     maintenanceTasks.add("Security scan");
-                    executeAutonomousAction("security_scan", (action, result) -> {
-                        Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                    executeAutonomousAction("security_scan", new AutonomousCallback() {
+                        @Override
+                        public void onAutonomousAction(String action, String result) {
+                            Log.d(TAG, "Maintenance: " + action + " -> " + result);
+                        }
+                        @Override
+                        public void onProblemSolved(String problem, String solution) {}
+                        @Override
+                        public void onErrorHandled(Exception error, String resolution) {}
+                        @Override
+                        public void onMaintenancePerformed(String maintenance) {}
                     });
                 }
                 
@@ -616,7 +661,7 @@ public class AutonomousAgent {
     }
     
     private ProblemSeverity assessErrorSeverity(Exception error) {
-        if (error instanceof OutOfMemoryError) {
+        if (error.getClass().getSimpleName().equals("OutOfMemoryError")) {
             return ProblemSeverity.CRITICAL;
         } else if (error instanceof SecurityException) {
             return ProblemSeverity.HIGH;
@@ -628,7 +673,8 @@ public class AutonomousAgent {
     }
     
     private boolean isRecoverable(Exception error) {
-        return !(error instanceof OutOfMemoryError || error instanceof StackOverflowError);
+        String errorType = error.getClass().getSimpleName();
+        return !(errorType.equals("OutOfMemoryError") || errorType.equals("StackOverflowError"));
     }
     
     // Maintenance decision methods

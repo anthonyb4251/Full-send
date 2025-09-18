@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
+// import javax.tools.JavaCompiler; // Not available on Android
+// import javax.tools.ToolProvider; // Not available on Android
 
 /**
  * Code Execution Engine for Self-Code Generation and Execution
