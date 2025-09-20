@@ -1,54 +1,39 @@
 package com.fullsend.jarvis.installer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
-import android.provider.Settings;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
+
+import com.fullsend.jarvis.MainActivity;
+import com.fullsend.jarvis.JarvisService;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-/**
- * Universal Android One-Click Installer
- * 
- * Features:
- * - Zero manual input required
- * - Universal device compatibility
- * - Automatic error detection and resolution
- * - Self-healing installation process
- * - Complete open source implementation
- */
-public class UniversalAndroidInstaller {
-    
-    private static final String TAG = "UniversalInstaller";
-    
-    private Context context;
-    private InstallationCallback callback;
-    private DeviceProfile deviceProfile;
-    private InstallationState state;
-    
+public class OneClickInstaller {
+
+    private final Context context;
+    private final InstallationCallback callback;
+    private final Executor executor;
+    private final Handler mainHandler;
+
     public interface InstallationCallback {
         void onInstallationStarted();
         void onInstallationProgress(int progress, String message);
         void onInstallationComplete();
-        void onInstallationError(String error, boolean canAutoFix);
+        void onInstallationError(String error);
         void onAutoFixApplied(String fix);
     }
-    
+
+    // Device profile (from Universal Installer)
     public static class DeviceProfile {
         public String manufacturer;
         public String model;
@@ -59,70 +44,63 @@ public class UniversalAndroidInstaller {
         public boolean hasUSBOTG;
         public boolean hasBiometrics;
         public long availableStorage;
-        public List<String> supportedFeatures;
-        public Map<String, String> optimizations;
-        
-        public DeviceProfile() {
-            supportedFeatures = new ArrayList<>();
-            optimizations = new HashMap<>();
-        }
+        public List<String> supportedFeatures = new ArrayList<>();
     }
-    
-    public static class InstallationState {
-        public boolean environmentDetected = false;
-        public boolean dependenciesResolved = false;
-        public boolean permissionsConfigured = false;
-        public boolean featuresEnabled = false;
-        public boolean installationComplete = false;
-        public List<String> appliedFixes = new ArrayList<>();
-        public List<String> enabledFeatures = new ArrayList<>();
-    }
-    
-    public UniversalAndroidInstaller(Context context, InstallationCallback callback) {
+
+    private DeviceProfile deviceProfile = new DeviceProfile();
+
+    public OneClickInstaller(Context context, InstallationCallback callback) {
         this.context = context;
         this.callback = callback;
-        this.deviceProfile = new DeviceProfile();
-        this.state = new InstallationState();
+        this.executor = Executors.newSingleThreadExecutor();
+        this.mainHandler = new Handler(Looper.getMainLooper());
     }
-    
-    /**
-     * Start the universal installation process with zero manual input
-     */
-    public void startUniversalInstallation() {
+
+    public void startOneClickInstallation() {
         callback.onInstallationStarted();
-        
-        new Thread(() -> {
-            try {
-                // Phase 1: Automated Environment Detection
-                detectEnvironment();
-                
-                // Phase 2: Intelligent Dependency Resolution
-                resolveDependencies();
-                
-                // Phase 3: Smart Permission Configuration
-                configurePermissions();
-                
-                // Phase 4: Feature Enablement Based on Hardware
-                enableFeatures();
-                
-                // Phase 5: Final Installation and Optimization
-                completeInstallation();
-                
-                callback.onInstallationComplete();
-                
-            } catch (Exception e) {
-                handleInstallationError(e);
-            }
-        }).start();
+        executor.execute(this::runInstallation);
     }
-    
-    /**
-     * Phase 1: Automated Environment Detection
-     */
-    private void detectEnvironment() throws Exception {
-        callback.onInstallationProgress(10, "Detecting device environment...");
-        
-        // Detect device information
+
+    private void runInstallation() {
+        try {
+            publishProgress(5, "Detecting device environment...");
+            detectEnvironment();
+
+            publishProgress(15, "Resolving dependencies...");
+            resolveDependencies();
+
+            publishProgress(30, "Configuring permissions...");
+            configurePermissions();
+
+            publishProgress(50, "Enabling features...");
+            enableFeatures();
+
+            publishProgress(70, "Creating directories and extracting files...");
+            createApplicationDirectories();
+            extractConfigurationAssets();
+
+            publishProgress(90, "Finalizing installation...");
+            applyFinalOptimizations();
+
+            publishProgress(100, "Installation complete!");
+            mainHandler.post(() -> {
+                callback.onInstallationComplete();
+                launchAppAndServices();
+            });
+
+        } catch (Exception e) {
+            handleInstallationError(e);
+        }
+    }
+
+    private void publishProgress(int progress, String message) {
+        mainHandler.post(() -> callback.onInstallationProgress(progress, message));
+    }
+
+    // -----------------------
+    // Environment Detection
+    // -----------------------
+    private void detectEnvironment() {
         deviceProfile.manufacturer = Build.MANUFACTURER;
         deviceProfile.model = Build.MODEL;
         deviceProfile.androidVersion = Build.VERSION.RELEASE;
@@ -132,190 +110,9 @@ public class UniversalAndroidInstaller {
         deviceProfile.hasUSBOTG = detectUSBOTGSupport();
         deviceProfile.hasBiometrics = detectBiometricSupport();
         deviceProfile.availableStorage = getAvailableStorage();
-        
-        // Apply manufacturer-specific optimizations
-        applyManufacturerOptimizations();
-        
-        // Detect supported features
         detectSupportedFeatures();
-        
-        state.environmentDetected = true;
-        Log.i(TAG, "Environment detected: " + deviceProfile.manufacturer + " " + 
-              deviceProfile.model + " (Android " + deviceProfile.androidVersion + ")");
     }
-    
-    /**
-     * Phase 2: Intelligent Dependency Resolution
-     */
-    private void resolveDependencies() throws Exception {
-        callback.onInstallationProgress(30, "Resolving dependencies...");
-        
-        // Check storage space
-        if (deviceProfile.availableStorage < 100 * 1024 * 1024) { // 100MB minimum
-            autoFixStorageSpace();
-        }
-        
-        // Check and install missing system libraries
-        checkAndInstallSystemLibraries();
-        
-        // Verify Android version compatibility
-        if (deviceProfile.apiLevel < 23) {
-            throw new Exception("Android 6.0 or higher required. Current: Android " + 
-                              deviceProfile.androidVersion);
-        }
-        
-        // Apply API level specific compatibility layers
-        applyCompatibilityLayers();
-        
-        state.dependenciesResolved = true;
-        Log.i(TAG, "Dependencies resolved successfully");
-    }
-    
-    /**
-     * Phase 3: Smart Permission Configuration
-     */
-    private void configurePermissions() throws Exception {
-        callback.onInstallationProgress(50, "Configuring permissions...");
-        
-        // Configure essential permissions automatically
-        configureEssentialPermissions();
-        
-        // Configure optional permissions based on available hardware
-        configureOptionalPermissions();
-        
-        // Apply manufacturer-specific permission handling
-        applyManufacturerPermissionFixes();
-        
-        state.permissionsConfigured = true;
-        Log.i(TAG, "Permissions configured successfully");
-    }
-    
-    /**
-     * Phase 4: Feature Enablement Based on Hardware
-     */
-    private void enableFeatures() throws Exception {
-        callback.onInstallationProgress(70, "Enabling features...");
-        
-        // Enable core AI assistant features (always available)
-        enableCoreFeatures();
-        
-        // Enable OBD diagnostics if USB OTG is available
-        if (deviceProfile.hasUSBOTG) {
-            enableOBDFeatures();
-            state.enabledFeatures.add("OBD Diagnostics");
-        }
-        
-        // Enable biometric security if available
-        if (deviceProfile.hasBiometrics) {
-            enableBiometricFeatures();
-            state.enabledFeatures.add("Biometric Security");
-        }
-        
-        // Enable voice features if microphone is available
-        if (deviceProfile.supportedFeatures.contains("microphone")) {
-            enableVoiceFeatures();
-            state.enabledFeatures.add("Voice Commands");
-        }
-        
-        // Enable location features if GPS is available
-        if (deviceProfile.supportedFeatures.contains("location")) {
-            enableLocationFeatures();
-            state.enabledFeatures.add("Location Services");
-        }
-        
-        state.featuresEnabled = true;
-        Log.i(TAG, "Features enabled: " + state.enabledFeatures.toString());
-    }
-    
-    /**
-     * Phase 5: Final Installation and Optimization
-     */
-    private void completeInstallation() throws Exception {
-        callback.onInstallationProgress(90, "Completing installation...");
-        
-        // Create application directories
-        createApplicationDirectories();
-        
-        // Extract and configure assets
-        extractConfigurationAssets();
-        
-        // Apply device-specific optimizations
-        applyDeviceOptimizations();
-        
-        // Configure background services
-        configureBackgroundServices();
-        
-        // Create installation success marker
-        createInstallationMarker();
-        
-        // Apply final system optimizations
-        applyFinalOptimizations();
-        
-        state.installationComplete = true;
-        callback.onInstallationProgress(100, "Installation complete!");
-        
-        Log.i(TAG, "Universal installation completed successfully");
-    }
-    
-    /**
-     * Automatic error handling with self-healing
-     */
-    private void handleInstallationError(Exception e) {
-        Log.e(TAG, "Installation error: " + e.getMessage(), e);
-        
-        // Attempt automatic error resolution
-        String autoFix = attemptAutoFix(e);
-        
-        if (autoFix != null) {
-            callback.onAutoFixApplied(autoFix);
-            // Retry installation after applying fix
-            startUniversalInstallation();
-        } else {
-            callback.onInstallationError(e.getMessage(), false);
-        }
-    }
-    
-    /**
-     * Intelligent auto-fix system
-     */
-    private String attemptAutoFix(Exception e) {
-        String errorMessage = e.getMessage().toLowerCase();
-        
-        // Storage space issues
-        if (errorMessage.contains("storage") || errorMessage.contains("space")) {
-            try {
-                autoFixStorageSpace();
-                return "Automatically cleared cache and temporary files to free up storage space";
-            } catch (Exception fixError) {
-                Log.e(TAG, "Auto-fix failed for storage issue", fixError);
-            }
-        }
-        
-        // Permission issues
-        if (errorMessage.contains("permission")) {
-            try {
-                autoFixPermissions();
-                return "Automatically resolved permission conflicts";
-            } catch (Exception fixError) {
-                Log.e(TAG, "Auto-fix failed for permission issue", fixError);
-            }
-        }
-        
-        // Compatibility issues
-        if (errorMessage.contains("compatibility") || errorMessage.contains("version")) {
-            try {
-                autoFixCompatibility();
-                return "Applied compatibility layer for device-specific issues";
-            } catch (Exception fixError) {
-                Log.e(TAG, "Auto-fix failed for compatibility issue", fixError);
-            }
-        }
-        
-        return null; // No automatic fix available
-    }
-    
-    // Helper methods for device detection
-    
+
     private String detectArchitecture() {
         String[] abis = Build.SUPPORTED_ABIS;
         if (abis.length > 0) {
@@ -327,7 +124,7 @@ public class UniversalAndroidInstaller {
         }
         return "Unknown";
     }
-    
+
     private boolean detectRootStatus() {
         try {
             Process process = Runtime.getRuntime().exec("su");
@@ -337,297 +134,152 @@ public class UniversalAndroidInstaller {
             return false;
         }
     }
-    
+
     private boolean detectUSBOTGSupport() {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_USB_HOST);
+        return context.getPackageManager().hasSystemFeature(android.content.pm.PackageManager.FEATURE_USB_HOST);
     }
-    
+
     private boolean detectBiometricSupport() {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_FINGERPRINT) ||
+        return context.getPackageManager().hasSystemFeature(android.content.pm.PackageManager.FEATURE_FINGERPRINT) ||
                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
     }
-    
+
     private long getAvailableStorage() {
-        StatFs stat = new StatFs(Environment.getDataDirectory().getPath());
-        return stat.getAvailableBytes();
+        File dir = context.getFilesDir();
+        return dir.getUsableSpace();
     }
-    
+
     private void detectSupportedFeatures() {
-        PackageManager pm = context.getPackageManager();
-        
-        if (pm.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+        if (context.getPackageManager().hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE)) {
             deviceProfile.supportedFeatures.add("microphone");
         }
-        if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            deviceProfile.supportedFeatures.add("camera");
-        }
-        if (pm.hasSystemFeature(PackageManager.FEATURE_LOCATION)) {
+        if (context.getPackageManager().hasSystemFeature(android.content.pm.PackageManager.FEATURE_LOCATION)) {
             deviceProfile.supportedFeatures.add("location");
         }
-        if (pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
-            deviceProfile.supportedFeatures.add("bluetooth");
-        }
-        if (pm.hasSystemFeature(PackageManager.FEATURE_WIFI)) {
-            deviceProfile.supportedFeatures.add("wifi");
+        if (context.getPackageManager().hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA)) {
+            deviceProfile.supportedFeatures.add("camera");
         }
     }
-    
-    // Manufacturer-specific optimizations
-    
-    private void applyManufacturerOptimizations() {
-        String manufacturer = deviceProfile.manufacturer.toLowerCase();
-        
-        switch (manufacturer) {
-            case "samsung":
-                applySamsungOptimizations();
-                break;
-            case "xiaomi":
-                applyXiaomiOptimizations();
-                break;
-            case "huawei":
-                applyHuaweiOptimizations();
-                break;
-            case "oneplus":
-                applyOnePlusOptimizations();
-                break;
-            case "oppo":
-                applyOppoOptimizations();
-                break;
-            case "vivo":
-                applyVivoOptimizations();
-                break;
-            default:
-                applyGenericOptimizations();
-                break;
+
+    // -----------------------
+    // Dependency & Permissions
+    // -----------------------
+    private void resolveDependencies() throws Exception {
+        if (deviceProfile.availableStorage < 50 * 1024 * 1024) {
+            autoFixStorageSpace();
+        }
+        if (deviceProfile.apiLevel < 23) {
+            throw new Exception("Android 6.0+ required. Current: " + deviceProfile.androidVersion);
         }
     }
-    
-    private void applySamsungOptimizations() {
-        deviceProfile.optimizations.put("knox_integration", "enabled");
-        deviceProfile.optimizations.put("samsung_health_api", "available");
-        deviceProfile.optimizations.put("edge_panel_support", "enabled");
-        deviceProfile.optimizations.put("secure_folder_compatible", "true");
+
+    private void configurePermissions() {
+        // Placeholder: implement runtime permissions if required
     }
-    
-    private void applyXiaomiOptimizations() {
-        deviceProfile.optimizations.put("miui_optimization", "enabled");
-        deviceProfile.optimizations.put("autostart_management", "required");
-        deviceProfile.optimizations.put("battery_optimization_bypass", "needed");
-        deviceProfile.optimizations.put("security_app_whitelist", "required");
+
+    // -----------------------
+    // Feature Enablement
+    // -----------------------
+    private void enableFeatures() {
+        // Core AI
+        // OBD
+        if (deviceProfile.hasUSBOTG) deviceProfile.supportedFeatures.add("OBD Diagnostics");
+        // Biometric
+        if (deviceProfile.hasBiometrics) deviceProfile.supportedFeatures.add("Biometric");
+        // Voice
+        if (deviceProfile.supportedFeatures.contains("microphone")) deviceProfile.supportedFeatures.add("Voice Commands");
+        // Location
+        if (deviceProfile.supportedFeatures.contains("location")) deviceProfile.supportedFeatures.add("Location Services");
     }
-    
-    private void applyHuaweiOptimizations() {
-        deviceProfile.optimizations.put("emui_optimization", "enabled");
-        deviceProfile.optimizations.put("protected_apps", "required");
-        deviceProfile.optimizations.put("battery_optimization", "manual_config");
-        deviceProfile.optimizations.put("app_launch_management", "required");
-    }
-    
-    private void applyOnePlusOptimizations() {
-        deviceProfile.optimizations.put("oxygenos_optimization", "enabled");
-        deviceProfile.optimizations.put("gaming_mode_integration", "available");
-        deviceProfile.optimizations.put("zen_mode_compatibility", "enabled");
-        deviceProfile.optimizations.put("alert_slider_support", "available");
-    }
-    
-    private void applyOppoOptimizations() {
-        deviceProfile.optimizations.put("coloros_optimization", "enabled");
-        deviceProfile.optimizations.put("app_freeze", "prevention_required");
-        deviceProfile.optimizations.put("background_app_limit", "bypass_needed");
-    }
-    
-    private void applyVivoOptimizations() {
-        deviceProfile.optimizations.put("funtouch_optimization", "enabled");
-        deviceProfile.optimizations.put("background_app_refresh", "manual_enable");
-        deviceProfile.optimizations.put("high_background_app_limit", "required");
-    }
-    
-    private void applyGenericOptimizations() {
-        deviceProfile.optimizations.put("generic_android", "enabled");
-        deviceProfile.optimizations.put("standard_permissions", "apply");
-    }
-    
-    // Auto-fix methods
-    
-    private void autoFixStorageSpace() throws Exception {
-        // Clear application cache
-        File cacheDir = context.getCacheDir();
-        if (cacheDir.exists()) {
-            deleteRecursive(cacheDir);
-        }
-        
-        // Clear external cache
-        File externalCacheDir = context.getExternalCacheDir();
-        if (externalCacheDir != null && externalCacheDir.exists()) {
-            deleteRecursive(externalCacheDir);
-        }
-        
-        state.appliedFixes.add("Cleared cache and temporary files");
-    }
-    
-    private void autoFixPermissions() throws Exception {
-        // Apply manufacturer-specific permission fixes
-        applyManufacturerPermissionFixes();
-        state.appliedFixes.add("Applied permission compatibility fixes");
-    }
-    
-    private void autoFixCompatibility() throws Exception {
-        // Apply additional compatibility layers
-        applyCompatibilityLayers();
-        state.appliedFixes.add("Applied compatibility layer");
-    }
-    
-    // Implementation of configuration methods
-    
-    private void checkAndInstallSystemLibraries() {
-        // Check for required system libraries and install if missing
-        // This would be implemented based on specific requirements
-    }
-    
-    private void applyCompatibilityLayers() {
-        // Apply API level specific compatibility
-        if (deviceProfile.apiLevel < 26) {
-            // Apply pre-Android 8.0 compatibility
-            deviceProfile.optimizations.put("legacy_compatibility", "enabled");
-        }
-        if (deviceProfile.apiLevel >= 29) {
-            // Apply Android 10+ scoped storage compatibility
-            deviceProfile.optimizations.put("scoped_storage", "enabled");
-        }
-    }
-    
-    private void configureEssentialPermissions() {
-        // Configure permissions that are absolutely required
-        // Implementation would handle runtime permission requests
-    }
-    
-    private void configureOptionalPermissions() {
-        // Configure permissions based on available hardware
-        // Implementation would handle optional feature permissions
-    }
-    
-    private void applyManufacturerPermissionFixes() {
-        // Apply manufacturer-specific permission handling
-        String manufacturer = deviceProfile.manufacturer.toLowerCase();
-        
-        if (manufacturer.equals("xiaomi")) {
-            // Handle MIUI-specific permission requirements
-            deviceProfile.optimizations.put("miui_permissions", "configured");
-        } else if (manufacturer.equals("huawei")) {
-            // Handle EMUI-specific permission requirements
-            deviceProfile.optimizations.put("emui_permissions", "configured");
-        }
-    }
-    
-    private void enableCoreFeatures() {
-        state.enabledFeatures.add("AI Assistant");
-        state.enabledFeatures.add("Battery Monitoring");
-        state.enabledFeatures.add("System Health");
-    }
-    
-    private void enableOBDFeatures() {
-        // Enable OBD-II diagnostic features
-        deviceProfile.optimizations.put("obd_diagnostics", "enabled");
-    }
-    
-    private void enableBiometricFeatures() {
-        // Enable biometric authentication features
-        deviceProfile.optimizations.put("biometric_auth", "enabled");
-    }
-    
-    private void enableVoiceFeatures() {
-        // Enable voice command features
-        deviceProfile.optimizations.put("voice_commands", "enabled");
-    }
-    
-    private void enableLocationFeatures() {
-        // Enable location-based features
-        deviceProfile.optimizations.put("location_services", "enabled");
-    }
-    
-    private void createApplicationDirectories() throws IOException {
-        File jarvisDir = new File(Environment.getExternalStorageDirectory(), "JarvisAI");
-        if (!jarvisDir.exists() && !jarvisDir.mkdirs()) {
-            throw new IOException("Failed to create application directory");
-        }
-        
-        // Create subdirectories
+
+    // -----------------------
+    // Directories & Assets
+    // -----------------------
+    private void createApplicationDirectories() throws Exception {
+        File jarvisDir = new File(context.getFilesDir(), "JarvisAI");
+        if (!jarvisDir.exists() && !jarvisDir.mkdirs()) throw new Exception("Failed to create directories");
         new File(jarvisDir, "logs").mkdirs();
         new File(jarvisDir, "config").mkdirs();
-        new File(jarvisDir, "cache").mkdirs();
-        new File(jarvisDir, "data").mkdirs();
+        new File(jarvisDir, "obd").mkdirs();
+        new File(jarvisDir, "ai").mkdirs();
+        new File(jarvisDir, "garage").mkdirs();
     }
-    
-    private void extractConfigurationAssets() {
-        // Extract configuration files from assets
-        // Implementation would extract all necessary configuration files
+
+    private void extractConfigurationAssets() throws Exception {
+        copyAssetToFile("config/default_settings.json", "config/settings.json");
+        copyAssetToFile("config/obd_protocols.json", "obd/protocols.json");
+        copyAssetToFile("config/ai_responses.json", "ai/responses.json");
+        copyAssetToFile("config/vehicle_database.json", "garage/vehicles.json");
     }
-    
-    private void applyDeviceOptimizations() {
-        // Apply device-specific optimizations based on detected profile
-        // Implementation would apply all collected optimizations
-    }
-    
-    private void configureBackgroundServices() {
-        // Configure background services based on device capabilities
-        // Implementation would set up services appropriately
-    }
-    
-    private void createInstallationMarker() throws IOException {
-        File jarvisDir = new File(Environment.getExternalStorageDirectory(), "JarvisAI");
-        File markerFile = new File(jarvisDir, ".universal_installation_complete");
-        
-        try (FileOutputStream fos = new FileOutputStream(markerFile)) {
-            String markerContent = "Universal Installation Complete\n" +
-                                 "Device: " + deviceProfile.manufacturer + " " + deviceProfile.model + "\n" +
-                                 "Android: " + deviceProfile.androidVersion + " (API " + deviceProfile.apiLevel + ")\n" +
-                                 "Architecture: " + deviceProfile.architecture + "\n" +
-                                 "Features: " + state.enabledFeatures.toString() + "\n" +
-                                 "Optimizations: " + deviceProfile.optimizations.toString() + "\n" +
-                                 "Installation Date: " + System.currentTimeMillis();
-            fos.write(markerContent.getBytes());
+
+    private void copyAssetToFile(String assetPath, String targetPath) throws Exception {
+        File baseDir = new File(context.getFilesDir(), "JarvisAI");
+        File targetFile = new File(baseDir, targetPath);
+        try (InputStream is = context.getAssets().open(assetPath);
+             FileOutputStream fos = new FileOutputStream(targetFile)) {
+            byte[] buffer = new byte[1024]; int len;
+            while ((len = is.read(buffer)) > 0) fos.write(buffer, 0, len);
         }
     }
-    
+
+    // -----------------------
+    // Final Optimizations
+    // -----------------------
     private void applyFinalOptimizations() {
-        // Apply final system optimizations
-        // Implementation would apply all final optimizations
+        // Placeholder for device-specific optimizations
     }
-    
-    // Utility methods
-    
-    private void deleteRecursive(File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory()) {
-            File[] children = fileOrDirectory.listFiles();
-            if (children != null) {
-                for (File child : children) {
-                    deleteRecursive(child);
-                }
-            }
+
+    private void handleInstallationError(Exception e) {
+        String autoFix = attemptAutoFix(e);
+        if (autoFix != null) {
+            mainHandler.post(() -> callback.onAutoFixApplied(autoFix));
+            startOneClickInstallation(); // retry
+        } else {
+            mainHandler.post(() -> callback.onInstallationError(e.getMessage()));
         }
-        fileOrDirectory.delete();
     }
-    
-    /**
-     * Check if universal installation is complete
-     */
-    public static boolean isUniversalInstallationComplete(Context context) {
-        File jarvisDir = new File(Environment.getExternalStorageDirectory(), "JarvisAI");
-        File markerFile = new File(jarvisDir, ".universal_installation_complete");
-        return markerFile.exists();
-    }
-    
-    /**
-     * Get device profile for current device
-     */
-    public static DeviceProfile getCurrentDeviceProfile(Context context) {
-        UniversalAndroidInstaller installer = new UniversalAndroidInstaller(context, null);
-        try {
-            installer.detectEnvironment();
-            return installer.deviceProfile;
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to detect device profile", e);
-            return new DeviceProfile();
+
+    private String attemptAutoFix(Exception e) {
+        String msg = e.getMessage().toLowerCase();
+        if (msg.contains("storage")) {
+            try { autoFixStorageSpace(); return "Cleared cache to free storage"; } catch (Exception ignored) {}
         }
+        return null;
+    }
+
+    private void autoFixStorageSpace() throws Exception {
+        File cache = context.getCacheDir();
+        deleteRecursive(cache);
+        File extCache = context.getExternalCacheDir();
+        if (extCache != null) deleteRecursive(extCache);
+    }
+
+    private void deleteRecursive(File fileOrDir) {
+        if (fileOrDir == null) return;
+        if (fileOrDir.isDirectory()) for (File child : fileOrDir.listFiles()) deleteRecursive(child);
+        fileOrDir.delete();
+    }
+
+    // -----------------------
+    // Launch Application
+    // -----------------------
+    private void launchAppAndServices() {
+        Intent mainIntent = new Intent(context, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(mainIntent);
+
+        Intent serviceIntent = new Intent(context, JarvisService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) context.startForegroundService(serviceIntent);
+        else context.startService(serviceIntent);
+
+        Toast.makeText(context, "🎉 Jarvis AI installed successfully!", Toast.LENGTH_LONG).show();
+    }
+
+    // -----------------------
+    // Installation Check
+    // -----------------------
+    public static boolean isInstallationComplete(Context context) {
+        File marker = new File(context.getFilesDir(), "JarvisAI/.installation_complete");
+        return marker.exists();
     }
 }
